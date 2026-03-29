@@ -5,7 +5,7 @@ import { readFile, realpath } from "node:fs/promises";
 import { resolve, join, dirname, extname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { exec } from "node:child_process";
-import { isGitRepo, getAllFileDiffs, getRepoInfo, discoverGitRepos, getMultiRepoDiffs, getBranches, type FileDiff, type RepoInfo } from "./git.ts";
+import { isGitRepo, getAllFileDiffs, getRepoInfo, discoverGitRepos, getMultiRepoDiffs, getBranches, getDefaultBranch, type FileDiff, type RepoInfo } from "./git.ts";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PUBLIC_DIR = join(__dirname, "public");
@@ -138,6 +138,25 @@ Arguments:
 
   console.log(`Loading git changes${state.baseRef ? ` (base: ${state.baseRef})` : ""}...`);
   await loadDiffs();
+
+  // If no dirty changes and no --base was specified, auto-detect default branch and retry
+  if (state.diffs.length === 0 && !state.baseRef) {
+    // Find the default branch from any available repo
+    let defaultBranch: string | null = null;
+    if (state.multiRepo) {
+      for (const name of state.repoNames) {
+        defaultBranch = await getDefaultBranch(join(state.workDir, name));
+        if (defaultBranch) break;
+      }
+    } else {
+      defaultBranch = await getDefaultBranch(state.workDir);
+    }
+
+    if (defaultBranch) {
+      console.log(`No uncommitted changes. Switching to branch diff (vs ${defaultBranch})...`);
+      await loadDiffs(defaultBranch);
+    }
+  }
 
   if (state.diffs.length === 0) {
     console.log("No changes to review.");
