@@ -1,0 +1,27 @@
+{
+  "name": "codereview",
+  "version": "1.0.0",
+  "type": "module",
+  "bin": {
+    "codereview": "./dist/cli.mjs"
+  },
+  "files": [
+    "dist/"
+  ],
+  "scripts": {
+    "build": "bun scripts/build.ts",
+    "dev": "bun run build && node dist/cli.mjs",
+    "start": "node dist/cli.mjs",
+    "prepare": "bun run build"
+  },
+  "dependencies": {
+    "lucide-react": "^1.7.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "bun-types": "latest"
+  }
+}
