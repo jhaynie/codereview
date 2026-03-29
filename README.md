@@ -2,6 +2,10 @@
 
 A local code review tool for humans reviewing AI-generated changes. Point it at a git repo (or a directory of repos), browse diffs in your browser, leave inline comments, and generate structured markdown feedback you can paste back into your agent session.
 
+## Quick Demo Video
+
+<video src="./images/Codereviewr_web.mp4" width="100%" height="240" controls></video>
+
 ## Install
 
 Requires [Bun](https://bun.sh) to build, runs on Node.js or Bun.

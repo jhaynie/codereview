@@ -287,7 +287,33 @@ export async function getMultiRepoDiffs(parentDir: string, repoNames: string[], 
   for (const name of repoNames) {
     const repoDir = join(parentDir, name);
     const info = await getRepoInfo(repoDir);
-    const diffs = await getAllFileDiffs(repoDir, name, baseRef);
+    let diffs: FileDiff[] = [];
+
+    // Try the requested baseRef first
+    if (baseRef) {
+      try {
+        diffs = await getAllFileDiffs(repoDir, name, baseRef);
+      } catch {
+        // baseRef doesn't exist in this repo — try its own default branch
+        const repoBranch = await getDefaultBranch(repoDir);
+        if (repoBranch && repoBranch !== info.branch) {
+          try {
+            diffs = await getAllFileDiffs(repoDir, name, repoBranch);
+          } catch {
+            // fall through to dirty
+          }
+        }
+      }
+    }
+
+    // If no baseRef or base diff returned nothing, try dirty changes
+    if (diffs.length === 0) {
+      try {
+        diffs = await getAllFileDiffs(repoDir, name);
+      } catch {
+        // skip this repo
+      }
+    }
 
     if (diffs.length > 0) {
       repos.push({ name, info });
