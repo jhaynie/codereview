@@ -7,6 +7,13 @@ A local code review tool for humans reviewing AI-generated changes. Point it at 
 Requires [Bun](https://bun.sh) to build, runs on Node.js or Bun.
 
 ```bash
+npm install codereviewr -g # npm
+bun add codereviewr -g     # bun
+```
+
+Install from source:
+
+```bash
 # Clone and install globally
 git clone https://github.com/jhaynie/codereview.git
 cd codereview
@@ -37,11 +44,11 @@ The tool opens a browser UI and exits automatically when you close the tab.
 
 ### Options
 
-| Flag | Description |
-|------|-------------|
-| `-b, --base <ref>` | Diff against a base branch (e.g., `main`). Shows all committed + uncommitted changes since the branch diverged. |
-| `-p, --port <port>` | Run the UI on a specific port. Default: random available port. |
-| `-h, --help` | Show help. |
+| Flag                | Description                                                                                                     |
+| ------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `-b, --base <ref>`  | Diff against a base branch (e.g., `main`). Shows all committed + uncommitted changes since the branch diverged. |
+| `-p, --port <port>` | Run the UI on a specific port. Default: random available port.                                                  |
+| `-h, --help`        | Show help.                                                                                                      |
 
 ### Multi-Repo Mode
 
@@ -80,14 +87,14 @@ In `src/api/auth.ts` around lines 108, the token refresh logic has a race condit
 
 ## Keyboard Shortcuts
 
-| Key | Context | Action |
-|-----|---------|--------|
-| `Up/Down` | Sidebar | Navigate files |
-| `Left` | Diff panel | Focus sidebar |
-| `Right` | Sidebar | Focus diff panel |
-| `+` click | Diff line | Add comment |
-| `Cmd+Enter` | Comment editor | Save comment |
-| `Esc` | Comment editor / modal | Cancel / close |
+| Key         | Context                | Action           |
+| ----------- | ---------------------- | ---------------- |
+| `Up/Down`   | Sidebar                | Navigate files   |
+| `Left`      | Diff panel             | Focus sidebar    |
+| `Right`     | Sidebar                | Focus diff panel |
+| `+` click   | Diff line              | Add comment      |
+| `Cmd+Enter` | Comment editor         | Save comment     |
+| `Esc`       | Comment editor / modal | Cancel / close   |
 
 ## UI Features
 
@@ -96,6 +103,26 @@ In `src/api/auth.ts` around lines 108, the token refresh logic has a race condit
 - **Branch toggle** -- Switch between "dirty" (uncommitted only) and "vs main" (full branch diff) on the fly
 - **Diff stats** -- Each file header shows `+N` / `-N` line counts
 - **Expandable context** -- Hidden lines between hunks expand incrementally (10 at a time)
+
+### Default View
+
+![default](./images/defaultview.png)
+
+### Dark Mode
+
+![darkmode](./images/darkmode.png)
+
+### Leave Comments
+
+![comment](./images/comment.png)
+
+### Generate the Review Feedback
+
+![review](./images/review.png)
+
+### Supports Multi-Repo
+
+![multirepo](./images/multirepo.png)
 
 ## Development
 

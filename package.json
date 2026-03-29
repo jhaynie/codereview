@@ -1,9 +1,10 @@
 {
-  "name": "codereview",
+  "name": "codereviewr",
   "version": "1.0.0",
   "type": "module",
   "bin": {
-    "codereview": "./dist/cli.mjs"
+    "codereview": "./dist/cli.mjs",
+    "codereviewr": "./dist/cli.mjs"
   },
   "files": [
     "dist/"
