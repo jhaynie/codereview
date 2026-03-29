@@ -81,6 +81,28 @@ export async function isGitRepo(dir: string): Promise<boolean> {
   }
 }
 
+/**
+ * Detect the default branch (main, master, etc.) for a repo.
+ * Checks remote HEAD first, then falls back to checking if main/master exist.
+ */
+export async function getDefaultBranch(dir: string): Promise<string | null> {
+  // Try remote HEAD
+  try {
+    const ref = (await git(["symbolic-ref", "refs/remotes/origin/HEAD"], dir)).trim();
+    const branch = ref.replace("refs/remotes/origin/", "");
+    if (branch) return branch;
+  } catch {
+    // no remote HEAD set
+  }
+
+  // Fall back: check if main or master exists
+  const branches = await getBranches(dir);
+  if (branches.includes("main")) return "main";
+  if (branches.includes("master")) return "master";
+
+  return null;
+}
+
 export async function getBranches(dir: string): Promise<string[]> {
   try {
     const output = (await git(["branch", "--format=%(refname:short)"], dir)).trim();
