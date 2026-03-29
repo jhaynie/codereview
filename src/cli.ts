@@ -122,26 +122,28 @@ Arguments:
   state.workDir = targetDir;
   state.baseRef = values.base || "";
 
-  if (await isGitRepo(targetDir)) {
+  // Discover repo layout — check for sub-repos even if the parent is itself a git repo
+  const subRepos = await discoverGitRepos(targetDir);
+
+  if (subRepos.length > 0) {
+    // Multi-repo mode — sub-repos take priority
+    console.log(`Found ${subRepos.length} repo(s): ${subRepos.join(", ")}`);
+    state.multiRepo = true;
+    state.repoNames = subRepos;
+  } else if (await isGitRepo(targetDir)) {
+    // Single repo mode
     state.multiRepo = false;
     state.repoNames = [];
   } else {
-    const repoNames = await discoverGitRepos(targetDir);
-    if (repoNames.length === 0) {
-      console.error(`Error: ${targetDir} is not a git repository and contains no git repos`);
-      process.exit(1);
-    }
-    console.log(`Found ${repoNames.length} repo(s): ${repoNames.join(", ")}`);
-    state.multiRepo = true;
-    state.repoNames = repoNames;
+    console.error(`Error: ${targetDir} is not a git repository and contains no git repos`);
+    process.exit(1);
   }
 
   console.log(`Loading git changes${state.baseRef ? ` (base: ${state.baseRef})` : ""}...`);
   await loadDiffs();
 
-  // If no dirty changes and no --base was specified, auto-detect default branch and retry
+  // If no changes found and no --base was specified, auto-detect default branch and retry
   if (state.diffs.length === 0 && !state.baseRef) {
-    // Find the default branch from any available repo
     let defaultBranch: string | null = null;
     if (state.multiRepo) {
       for (const name of state.repoNames) {
