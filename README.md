@@ -4,7 +4,8 @@ A local code review tool for humans reviewing AI-generated changes. Point it at 
 
 ## Quick Demo Video
 
-<video src="./images/Codereviewr_web.mp4" width="100%" height="240" controls></video>
+<video width="100%" src="https://github.com/user-attachments/assets/7e71c2ab-b105-4187-9648-945636990151"></video>
+
 
 ## Install
 
